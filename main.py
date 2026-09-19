@@ -57,4 +57,6 @@ async def yahoo_quote(symbol: str = Query(...)):
         "floatShares": q.get("floatShares"),
         "marketCap": q.get("marketCap"),
         "shortPercentOfFloat": q.get("shortPercentOfFloat"),
-    }
+    }@app.get("/test999xyz")
+async def test999xyz():
+    return {"test": "success", "timestamp": "2026-09-19-21-55"}
