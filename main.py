@@ -1,5 +1,5 @@
 # ============================================================
-# Faisal Stock Screener Bot - Version 10.0
+# Faisal Stock Screener Bot - Version 10.1
 # Yahoo (via Proxy) + Finnhub metrics
 # ============================================================
 
@@ -71,18 +71,6 @@ LOCAL_UNIVERSE = [
     "TNON", "TOMZ", "TRNR", "TRVN", "TSBX", "UPC", "USEG", "VBIV",
     "VERO", "VINO", "VIRI", "VRPX", "VTVT", "WATT", "WISA", "WKEY",
     "XELB", "XERS", "XLO", "XRTX", "YCBD", "ZAPP", "ZCMD", "ZJYL",
-    "BJDX", "CTM", "KWE", "SOPA", "PRSO", "ELYM", "ALLR", "AGRI",
-    "ALZN", "AMST", "APRE",", "A "UID", "AUUD", "AVTX",B "AXLA", "BCDA",
-    "BCLI", "BEAT", "BIVI", "BLBXMEA", "BNOX", "BOLT",
-    "BRTX", "BTBT", "BTCS", "BTTR", "BYSI", "CANF", "CARV", "CASI",
-    "CBIH", "CCCC", "CELZ", "CFRX", "CGEN", "CHRS", "CLVR", "CNTB",
-    "CNTX", "COCP", "COEP", "CRBP", "CREX", "CRGE", "CTSO", "CUEN",
-    "CVKD", "CVM", "CYCC", "CYTO", "DBGI", "DCTH", "DFLI", "DMAC",
-    "DRMA", "DRRX", "EFTR", "EIGR", "ELDN", "ENG", "ENSC",
-    "EPIX", "ERNA", "EVFM", "EVLO", "EXPR", "FBRX", "FFIE", "FGEN",
-    "FHTX", "FLGC", "FPAY", "FRES", "FREQ", "FRGE", "GANX", "GENE",
-    "GHSI", "GLMD", "GLTO", "GMBL", "GOVX", "GRNA", "GRTS",
-    "GTBP", "GTHX", "HCWB", "HGEN", "HOLO", "HOOK", "HOWL", "HPCO",
 ]
 
 # ============================================================
