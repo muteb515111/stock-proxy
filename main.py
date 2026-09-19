@@ -4,7 +4,7 @@ import httpx
 import re
 from datetime import datetime, timezone
 
-VERSION = "2.0"
+VERSION = "3.0"
 
 app = FastAPI(title="Stock Proxy", version=VERSION)
 
@@ -24,6 +24,11 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": VERSION}
+
+
+@app.get("/version")
+async def version():
+    return {"version": VERSION}
 
 
 @app.get("/yahoo/candles")
@@ -116,6 +121,58 @@ async def yahoo_quote(symbol: str = Query(...)):
                 "fiftyTwoWeekHigh": q.get("fiftyTwoWeekHigh"),
                 "fiftyTwoWeekLow": q.get("fiftyTwoWeekLow"),
             }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/finviz/screener")
+async def finviz_screener(
+    filters: str = Query(""),
+    tickers: str = Query(""),
+):
+    if tickers:
+        url = "https://finviz.com/quote.ashx?t=" + tickers
+    else:
+        url = "https://finviz.com/screener.ashx?v=111"
+        if filters:
+            url += "&f=" + filters
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            r = await client.get(url, headers=BROWSER_HEADERS)
+            if r.status_code != 200:
+                raise HTTPException(
+                    status_code=r.status_code,
+                    detail="Finviz returned " + str(r.status_code),
+                )
+
+            soup = BeautifulSoup(r.text, "lxml")
+            rows = []
+            table = soup.find("table", class_=re.compile("screener|table"))
+            if table:
+                trs = table.find_all("tr")
+                for tr in trs:
+                    tds = tr.find_all("td")
+                    if len(tds) >= 11:
+                        ticker_link = tr.find("a", class_="tab-link")
+                        if not ticker_link:
+                            continue
+                        row = {
+                            "ticker": ticker_link.text.strip(),
+                            "company": tds[2].text.strip() if len(tds) > 2 else "",
+                            "sector": tds[3].text.strip() if len(tds) > 3 else "",
+                            "market_cap": tds[6].text.strip() if len(tds) > 6 else "",
+                            "price": tds[8].text.strip() if len(tds) > 8 else "",
+                            "change": tds[9].text.strip() if len(tds) > 9 else "",
+                            "volume": tds[10].text.strip() if len(tds) > 10 else "",
+                        }
+                        rows.append(row)
+
+            return {"success": True, "count": len(rows), "results": rows}
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="Finviz timeout")
     except HTTPException:
         raise
     except Exception as e:
